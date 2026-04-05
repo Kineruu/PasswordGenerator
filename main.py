@@ -1,6 +1,6 @@
 
 from string import ascii_lowercase, ascii_uppercase, digits, punctuation
-from random import choice
+import secrets
 from clipboard import copy
 
 import customtkinter as ct
@@ -149,19 +149,48 @@ def generate_password():
     """
     A function that is used for the most important part in this entire code, generating the password itself.
     """
+
     global generated_password
-    generated_password = "" 
 
     try:
         length = int(how_long_password.get())
     except ValueError:
         length = default_length
 
-    for _ in range(length):
-        generated_password += choice(characters_to_pick_from)
+    if not characters_to_pick_from:
+        new_password.configure(text="Select at least one option in the settings.")
+        return
+    
+    password_characters = []
+
+    if include_letters: password_characters.append(secrets.choice(ascii_lowercase + ascii_uppercase))
+    if include_numbers: password_characters.append(secrets.choice(digits))
+    if include_custom_symbols: password_characters.append(secrets.choice(punctuation))
+
+    minimal_length = len(password_characters)
+    maximum_length = 1000
+    
+    if length < minimal_length:
+        new_password.configure(text=f"Minimum length: {minimal_length}")
+        return
+
+    if length > 1000:
+        new_password.configure(text=f"Maximum length: {maximum_length}")
+        return
+
+    for _ in range(length - len(password_characters)):
+        password_characters.append(secrets.choice(characters_to_pick_from))
+
+    secrets.SystemRandom().shuffle(password_characters)
+
+    # Combine characters into the final password
+    generated_password = ''.join(password_characters)
+
+    # Copying it
     copy(generated_password)
 
-    new_password.configure(text="*******************************") # Thinking about changing it into something meaningful, definitely not the length of the password
+    # '*'s 
+    new_password.configure(text="*" * len(generated_password))
 
 # The button to generate the password
 generate_password_button = ct.CTkButton(master=frame, text="Create", command=generate_password, width=90, height=30)
