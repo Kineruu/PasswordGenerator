@@ -161,7 +161,7 @@ def generate_password():
         generated_password += choice(characters_to_pick_from)
     copy(generated_password)
 
-    new_password.configure(text="")
+    new_password.configure(text="*******************************") # Thinking about changing it into something meaningful, definitely not the length of the password
 
 # The button to generate the password
 generate_password_button = ct.CTkButton(master=frame, text="Create", command=generate_password, width=90, height=30)
