@@ -1,9 +1,9 @@
 
 from string import ascii_lowercase, ascii_uppercase, digits, punctuation
-import secrets
 from clipboard import copy
 
 import customtkinter as ct
+import secrets
 import json
 import os
 
@@ -169,7 +169,7 @@ def generate_password():
 
     minimal_length = len(password_characters)
     maximum_length = 1000
-    
+
     if length < minimal_length:
         new_password.configure(text=f"Minimum length: {minimal_length}")
         return
