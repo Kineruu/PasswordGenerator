@@ -20,7 +20,6 @@ include_custom_symbols = settings["include_custom_symbols"]
 default_length = settings["default_length"]
 theme = settings["theme"]
 
-
 characters_to_pick_from = ""
 
 # This creates a new main window, intializing it in ct.CTk()
@@ -29,8 +28,10 @@ window.geometry("250x220") # Setting it's size, (X, Y)
 window.resizable(False, False) # This disallows the user to change the size of the window, (width, height)
 window.title("Password") # Changes the top text at the top of the window.
 
+if theme == "":
+    theme = "black"
 
-frame = ct.CTkFrame(master=window)
+frame = ct.CTkFrame(master=window, fg_color=theme)
 frame.pack(fill="both", expand=True)
 
 def characters_set(include_letters, include_numbers, include_custom_symbols):
@@ -85,7 +86,7 @@ def open_settings():
     Opens settings window.
     """
     settings_window = ct.CTkToplevel(window)
-    settings_window.geometry("300x250")
+    settings_window.geometry("300x300")
     settings_window.title("Settings")
 
     title_label = ct.CTkLabel(settings_window, text="Settings", font=("Arial", 16))
@@ -99,6 +100,10 @@ def open_settings():
     include_numbers_box.select() if include_numbers else include_numbers_box.deselect()
     include_custom_symbols_box.select() if include_custom_symbols else include_custom_symbols_box.deselect()
 
+    theme_label = ct.CTkLabel(master=settings_window, text="Colour:").pack()
+    theme_entry = ct.CTkEntry(master=settings_window, placeholder_text="#123456")
+    theme_entry.pack()
+
     def save_settings():
         """
         A function that changes JSON's values based on whether the checkbox is checked.
@@ -108,6 +113,7 @@ def open_settings():
         include_letters = bool(include_letters_box.get())
         include_numbers = bool(include_numbers_box.get())
         include_custom_symbols = bool(include_custom_symbols_box.get())
+        theme = theme_entry.get()
 
         settings_data = {
             "Settings": {

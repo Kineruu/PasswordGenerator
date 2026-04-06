@@ -4,6 +4,6 @@
         "include_numbers": true,
         "include_custom_symbols": true,
         "default_length": 25,
-        "theme": "dark"
+        "theme": "black"
     }
 }
