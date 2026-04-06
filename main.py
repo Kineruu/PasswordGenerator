@@ -19,6 +19,7 @@ include_numbers = settings["include_numbers"]
 include_custom_symbols = settings["include_custom_symbols"]
 default_length = settings["default_length"]
 theme = settings["theme"]
+buttons_colour = settings["buttons_colour"]
 
 characters_to_pick_from = ""
 
@@ -30,6 +31,8 @@ window.title("Password") # Changes the top text at the top of the window.
 
 if theme == "":
     theme = "black"
+if buttons_colour == "":
+    theme = "darkblue"
 
 frame = ct.CTkFrame(master=window, fg_color=theme)
 frame.pack(fill="both", expand=True)
@@ -76,7 +79,7 @@ def create_option(parent, text): # PLEASE SAVE ME FROM COPYING AND PASTING EVERY
     label = ct.CTkLabel(row, text=text)
     label.grid(row=0, column=0, sticky="w")
 
-    check_box = ct.CTkCheckBox(row, text="")
+    check_box = ct.CTkCheckBox(row, text="", fg_color=buttons_colour)
     check_box.grid(row=0, column=1, sticky="e")
 
     return check_box
@@ -86,10 +89,10 @@ def open_settings():
     Opens settings window.
     """
     settings_window = ct.CTkToplevel(window)
-    settings_window.geometry("300x300")
+    settings_window.geometry("310x310")
     settings_window.title("Settings")
 
-    title_label = ct.CTkLabel(settings_window, text="Settings", font=("Arial", 16))
+    title_label = ct.CTkLabel(settings_window, text="Settings")
     title_label.pack(pady=10)
 
     include_letters_box = create_option(settings_window, "Include letters:")
@@ -100,9 +103,18 @@ def open_settings():
     include_numbers_box.select() if include_numbers else include_numbers_box.deselect()
     include_custom_symbols_box.select() if include_custom_symbols else include_custom_symbols_box.deselect()
 
-    theme_label = ct.CTkLabel(master=settings_window, text="Colour:").pack()
-    theme_entry = ct.CTkEntry(master=settings_window, placeholder_text="#123456")
+    theme_label = ct.CTkLabel(master=settings_window, text="Background colour:")
+    theme_label.pack()
+    theme_entry = ct.CTkEntry(master=settings_window, placeholder_text="#123456", width=75, height=10)
     theme_entry.pack()
+
+    buttons_colour_label = ct.CTkLabel(master=settings_window, text="Buttons colour:")
+    buttons_colour_label.pack()
+    buttons_colour_entry = ct.CTkEntry(master=settings_window, placeholder_text="#123456", width=75, height=10)
+    buttons_colour_entry.pack()
+
+    warning_label = ct.CTkLabel(master=settings_window, text="New background/buttons colour will be only changed\nafter restarting the program.")
+    warning_label.pack(pady=5)
 
     def save_settings():
         """
@@ -114,6 +126,7 @@ def open_settings():
         include_numbers = bool(include_numbers_box.get())
         include_custom_symbols = bool(include_custom_symbols_box.get())
         theme = theme_entry.get()
+        buttons_colour = buttons_colour_entry.get()
 
         settings_data = {
             "Settings": {
@@ -121,7 +134,8 @@ def open_settings():
                 "include_numbers": include_numbers,
                 "include_custom_symbols": include_custom_symbols,
                 "default_length": default_length,
-                "theme": theme
+                "theme": theme,
+                "buttons_colour": buttons_colour
             }
         }
 
@@ -132,7 +146,7 @@ def open_settings():
 
         settings_window.destroy() 
 
-    save_button = ct.CTkButton(settings_window, text="Save", command=save_settings)
+    save_button = ct.CTkButton(settings_window, text="Save", command=save_settings, fg_color=buttons_colour)
     save_button.pack(pady=10)
 
 # The text at the top
@@ -199,24 +213,24 @@ def generate_password():
     new_password.configure(text="*" * len(generated_password))
 
 # The button to generate the password
-generate_password_button = ct.CTkButton(master=frame, text="Create", command=generate_password, width=90, height=30)
+generate_password_button = ct.CTkButton(master=frame, text="Create", command=generate_password, width=90, height=30, fg_color=buttons_colour)
 generate_password_button.place(x=80, y=80)
 
 # Incase you want to see the password
 def show_password():
     new_password.configure(text=generated_password)
 
-show_button = ct.CTkButton(master=frame, text="Show", command=show_password, width=10, height=10)
+show_button = ct.CTkButton(master=frame, text="Show", command=show_password, width=10, height=10, fg_color=buttons_colour)
 show_button.place(x=80, y=115)
 
 # Or incase you won't want to see it anymore
 def hide_password():
     new_password.configure(text="")
 
-hide_button = ct.CTkButton(master=frame, text="Hide", command=hide_password, width=10, height=10)
+hide_button = ct.CTkButton(master=frame, text="Hide", command=hide_password, width=10, height=10, fg_color=buttons_colour)
 hide_button.place(x=132, y=115)
 
-settings_button = ct.CTkButton(master=frame, text="Settings", command=open_settings, width=90, height=20)
+settings_button = ct.CTkButton(master=frame, text="Settings", command=open_settings, width=90, height=20, fg_color=buttons_colour)
 settings_button.place(x=80, y=140)
 
 copy_label = ct.CTkLabel(master=frame, text="The password is automatically\n copied to the clipboard.")

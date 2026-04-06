@@ -4,6 +4,7 @@
         "include_numbers": true,
         "include_custom_symbols": true,
         "default_length": 25,
-        "theme": "black"
+        "theme": "black",
+        "buttons_colour": "darkblue"
     }
 }
