@@ -21,18 +21,11 @@ default_length = settings["default_length"]
 theme = settings["theme"]
 buttons_colour = settings["buttons_colour"]
 
-characters_to_pick_from = ""
-
 # This creates a new main window, intializing it in ct.CTk()
 window = ct.CTk()
 window.geometry("250x220") # Setting it's size, (X, Y)
 window.resizable(False, False) # This disallows the user to change the size of the window, (width, height)
 window.title("Password") # Changes the top text at the top of the window.
-
-if theme == "":
-    theme = "black"
-if buttons_colour == "":
-    theme = "darkblue"
 
 frame = ct.CTkFrame(master=window, fg_color=theme)
 frame.pack(fill="both", expand=True)
@@ -64,8 +57,6 @@ characters_to_pick_from = characters_set(
     include_numbers,
     include_custom_symbols
 )
-
-generated_password = ""
 
 # This is used to avoid repetitive code,
 def create_option(parent, text): # PLEASE SAVE ME FROM COPYING AND PASTING EVERYTHING EACH TIME I WANT A NEW OPTION :sob: :pray:
@@ -220,7 +211,7 @@ def generate_password():
         new_password.configure(text=f"Minimum length: {minimal_length}")
         return
 
-    if length > 1000:
+    if length > maximum_length:
         new_password.configure(text=f"Maximum length: {maximum_length}")
         return
 
