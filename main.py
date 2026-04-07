@@ -112,13 +112,19 @@ def open_settings():
     theme_label.grid(row=0, column=0, padx=10)
 
     buttons_colour_label = ct.CTkLabel(master=colour_frame, text="Buttons colour:")
-    buttons_colour_label.grid(row=0, column=1, padx=10)
+    buttons_colour_label.grid(row=0, column=1)
+
+    adjust_length_label = ct.CTkLabel(master=colour_frame, text="Adjust length")
+    adjust_length_label.grid(row=0, column=2, padx=10)
 
     theme_entry = ct.CTkEntry(master=colour_frame, placeholder_text="#123456", width=85)
     theme_entry.grid(row=1, column=0, padx=10, pady=2)
 
     buttons_colour_entry = ct.CTkEntry(master=colour_frame, placeholder_text="#123456", width=85)
-    buttons_colour_entry.grid(row=1, column=1, padx=10, pady=2)
+    buttons_colour_entry.grid(row=1, column=1, pady=2)
+
+    adjust_length = ct.CTkEntry(master=colour_frame, placeholder_text=settings["default_length"], width=50)
+    adjust_length.grid(row=1, column=2, padx=10, pady=2)
 
     warning_label = ct.CTkLabel(master=settings_window, text="New background/buttons colour will be only changed\nafter restarting the program.")
     warning_label.pack(pady=5)
@@ -127,14 +133,25 @@ def open_settings():
         """
         A function that changes JSON's values based on whether the checkbox is checked.
         """
-        global include_letters, include_numbers, include_custom_symbols, characters_to_pick_from
+        global include_letters, include_numbers, include_custom_symbols, characters_to_pick_from, theme, buttons_colour, default_length
 
         include_letters = bool(include_letters_box.get())
         include_numbers = bool(include_numbers_box.get())
         include_custom_symbols = bool(include_custom_symbols_box.get())
-        theme = theme_entry.get()
-        buttons_colour = buttons_colour_entry.get()
+            # Get values from Entry fields, fallback to old values if empty
+        new_theme = theme_entry.get().strip()
+        if new_theme != "":
+            theme = new_theme
 
+        new_buttons_colour = buttons_colour_entry.get().strip()
+        if new_buttons_colour != "":
+            buttons_colour = new_buttons_colour
+
+        new_length = adjust_length.get().strip()
+        if new_length != "":
+            default_length = new_length
+
+        # Save to JSON
         settings_data = {
             "Settings": {
                 "include_letters": include_letters,
@@ -168,7 +185,7 @@ how_long_label = ct.CTkLabel(master=frame, text="Length:")
 how_long_label.place(x=80, y=50)
 
 # User enters the value here
-how_long_password = ct.CTkEntry(master=frame, placeholder_text="15", width=35, height=10)
+how_long_password = ct.CTkEntry(master=frame, placeholder_text=settings["default_length"], width=35, height=10)
 how_long_password.place(x=135, y=53.25)
 
 # Generating the password itself
@@ -179,10 +196,12 @@ def generate_password():
 
     global generated_password
 
+    default_length = settings["default_length"]
+    length = int(default_length)
     try:
         length = int(how_long_password.get())
-    except ValueError:
-        length = default_length
+    except ValueError, TypeError:
+        pass
 
     if not characters_to_pick_from:
         new_password.configure(text="Select at least one option in the settings.")

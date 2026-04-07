@@ -3,8 +3,8 @@
         "include_letters": true,
         "include_numbers": true,
         "include_custom_symbols": true,
-        "default_length": 25,
-        "theme": "black",
+        "default_length": "123",
+        "theme": "#112233",
         "buttons_colour": "darkblue"
     }
 }
